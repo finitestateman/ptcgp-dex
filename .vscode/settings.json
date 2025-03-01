@@ -1,0 +1,26 @@
+{
+    "editor.formatOnSave": true,
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.expand": false,
+    "explorer.fileNesting.patterns": {
+        "package.json": "package-lock.json, pnpm*, eslint*, nest-cli.json, tsconfig*, .*",
+        "*.controller.ts": "*.controller.spec.ts",
+        "*.service.ts": "*.service.spec.ts"
+    },
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit",
+        "source.organizeImports": "explicit",
+        "source.fixAll.tslint": "explicit",
+        "source.removeUnused.ts": "explicit",
+        "source.sortImports": "explicit",
+        "source.fixAll.stylelint": "explicit",
+        "source.fixAll.javascript": "explicit",
+        "source.fixAll.markdownlint": "explicit",
+        "source.fixAll.json": "explicit",
+        "source.fixAll.yaml": "explicit",
+        "source.fixAll.xml": "explicit",
+        "source.fixAll.html": "explicit",
+        "source.fixAll.css": "explicit",
+        "source.fixAll.less": "explicit"
+    }
+}
