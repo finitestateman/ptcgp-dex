@@ -101,7 +101,7 @@ export default tseslint.config(
             'arrow-spacing': ['error', { before: true, after: true }],
             'constructor-super': 'error',
             'no-class-assign': 'error',
-            'no-confusing-arrow': 'error',
+            // 'no-confusing-arrow': 'error',
             'no-const-assign': 'error',
             'no-dupe-class-members': 'error',
             'padding-line-between-statements': [
@@ -109,8 +109,8 @@ export default tseslint.config(
                 // { blankLine: 'always', prev: 'function', next: '*' }, // Blank line after function declarations
                 // { blankLine: 'always', prev: 'method', next: '*' }, // Blank line after class methods
                 // { blankLine: 'always', prev: 'method', next: 'method' }, // Ensures a blank line between methods
-                { blankLine: 'always', prev: '*', next: 'return' }, // Blank line before return statements
-                { blankLine: 'always', prev: '*', next: '*' }, // Blank line between all statements
+                // { blankLine: 'always', prev: '*', next: 'return' }, // Blank line before return statements
+                // { blankLine: 'always', prev: '*', next: '*' }, // Blank line between all statements
                 { blankLine: 'any', prev: 'import', next: 'import' }, // Allows multiple blank lines between imports
             ],
             'no-multiple-empty-lines': [
