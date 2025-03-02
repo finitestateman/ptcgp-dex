@@ -1,6 +1,6 @@
 import { CreateDateColumn, UpdateDateColumn, VersionColumn } from 'typeorm';
 
-export abstract class MetaData {
+export abstract class Metadata {
     @CreateDateColumn({ select: false })
     public createdAt: Date;
 

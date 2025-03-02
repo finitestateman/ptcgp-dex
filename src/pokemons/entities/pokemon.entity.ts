@@ -1,5 +1,5 @@
 import { RPG_TYPE, RpgType } from 'src/common/const/types';
-import { MetaData } from 'src/common/meta-data.table';
+import { Metadata } from 'src/common/metadata.table';
 import {
     AfterLoad,
     Column,
@@ -12,7 +12,7 @@ import {
     comment: 'Pokédex from the original Pokémon games',
 })
 @Unique(['dexNo', 'name'])
-export class Pokemon extends MetaData {
+export class Pokemon extends Metadata {
     @PrimaryGeneratedColumn('identity', {
         type: 'int',
         name: 'id',
