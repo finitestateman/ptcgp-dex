@@ -11,7 +11,7 @@
         "source.fixAll.eslint": "explicit",
         "source.organizeImports": "explicit",
         "source.fixAll.tslint": "explicit",
-        "source.removeUnused.ts": "explicit",
+        // "source.removeUnused.ts": "explicit",
         "source.sortImports": "explicit",
         "source.fixAll.stylelint": "explicit",
         "source.fixAll.javascript": "explicit",

@@ -1,0 +1,102 @@
+import { RPG_TYPE, RpgType } from 'src/common/const/types';
+import { MetaData } from 'src/common/meta-data.table';
+import {
+    AfterLoad,
+    Column,
+    Entity,
+    PrimaryGeneratedColumn,
+    Unique,
+} from 'typeorm';
+
+@Entity({
+    comment: 'Pokédex from the original Pokémon games',
+})
+@Unique(['dexNo', 'name'])
+export class Pokemon extends MetaData {
+    @PrimaryGeneratedColumn('identity', {
+        type: 'int',
+        name: 'id',
+    })
+    id: number;
+
+    @Column({
+        type: 'smallint',
+        nullable: true,
+        comment:
+            'National Pokédex number.' +
+            'Can be duplicated for different forms.(-> Not Unique)' +
+            'Always null for Fossil Pokémons.(-> Nullable)' +
+            'Must not be null for all other Pokémons.',
+    })
+    dexNo: number;
+
+    @Column({
+        type: 'varchar',
+        length: 64,
+        nullable: false,
+        unique: true,
+        comment:
+            'kebab-case identifier of the Pokémon.' +
+            'Used for multilanguage and URL path variable',
+    })
+    identifier: string;
+
+    @Column({
+        type: 'varchar',
+        length: 64,
+        nullable: false,
+        comment: 'The Name of the Pokémon in English.',
+    })
+    name: string;
+
+    @Column({
+        type: 'varchar',
+        length: 64,
+        nullable: false,
+        comment: 'e.g. Seed(without Pokémon)',
+    })
+    species: string;
+
+    @Column({
+        type: 'varchar',
+        length: 64,
+        nullable: false,
+        enum: Object.values(RPG_TYPE),
+    })
+    type1: RpgType;
+
+    @Column({
+        type: 'varchar',
+        length: 64,
+        nullable: true,
+        enum: Object.values(RPG_TYPE),
+    })
+    type2?: RpgType;
+
+    @AfterLoad()
+    setTypes() {
+        this.types = this.type2 ? [this.type1, this.type2] : [this.type1];
+    }
+    types: [RpgType, RpgType?];
+
+    @Column({
+        type: 'integer',
+        nullable: true,
+        comment: "The Pokémon's height(cm) * 10.",
+    })
+    height?: number;
+
+    @Column({
+        type: 'integer',
+        nullable: true,
+        comment: "The Pokémon's weight(kg) * 10.",
+    })
+    weight?: number;
+
+    @Column({
+        type: 'smallint',
+        nullable: true,
+        comment: 'The generation in which the Pokémon was first introduced.',
+    })
+    introducedGen?: number;
+}

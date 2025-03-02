@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_FILTER } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as Joi from 'joi';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { DOTENV } from './common/const/env.const';
+import { QueryFailedErrorFilter } from './common/filters/query-failed-error.filter';
+import { PokemonsModule } from './pokemons/pokemons.module';
 
 @Module({
     imports: [
@@ -27,14 +29,23 @@ import { DOTENV } from './common/const/env.const';
                 username: configService.get<string>(DOTENV.DB.USERNAME),
                 password: configService.get<string>(DOTENV.DB.PASSWORD),
                 database: configService.get<string>(DOTENV.DB.DATABASE),
-                entities: ['src/**/*.entity{.ts,.js}'],
+                schema: 'public',
+                entities: ['dist/**/entities/*.entity{.ts,.js}'],
                 synchronize: true,
                 logging: true,
+                autoLoadEntities: true,
+                namingStrategy: new SnakeNamingStrategy(),
             }),
             inject: [ConfigService],
         }),
+        PokemonsModule,
     ],
-    controllers: [AppController],
-    providers: [AppService],
+    controllers: [],
+    providers: [
+        {
+            provide: APP_FILTER,
+            useClass: QueryFailedErrorFilter,
+        },
+    ],
 })
 export class AppModule {}
