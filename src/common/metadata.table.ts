@@ -1,12 +1,14 @@
+import { Exclude } from 'class-transformer';
 import { CreateDateColumn, UpdateDateColumn, VersionColumn } from 'typeorm';
 
+@Exclude()
 export abstract class Metadata {
     @CreateDateColumn({ type: 'timestamptz', select: false })
-    public createdAt: Date;
+    createdAt: Date;
 
     @UpdateDateColumn({ type: 'timestamptz', select: false })
-    public updatedAt: Date;
+    updatedAt: Date;
 
     @VersionColumn({ select: false })
-    public version: number;
+    version: number;
 }

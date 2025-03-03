@@ -1,3 +1,4 @@
+import { lang, LANG } from 'src/common/const/lang';
 import { Metadata } from 'src/common/metadata.table';
 import { Pokemon } from 'src/pokemons/entities/pokemon.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
@@ -15,8 +16,16 @@ export class Description extends Metadata {
         length: '512',
         nullable: false,
     })
-    content: number;
+    content: string;
 
-    @ManyToOne(() => Pokemon, (pokemon) => pokemon.id)
+    @Column({
+        type: 'enum',
+        nullable: false,
+        enumName: 'lang',
+        enum: Object.values(LANG),
+    })
+    lang: lang;
+
+    @ManyToOne(() => Pokemon, (pokemon) => pokemon.descriptions)
     pokemon: Pokemon;
 }

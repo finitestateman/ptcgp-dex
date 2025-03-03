@@ -6,7 +6,10 @@ import {
     Param,
     Patch,
     Post,
+    Request,
+    UseInterceptors,
 } from '@nestjs/common';
+import { TransactionInterceptor } from 'src/common/Interceptors/transaction.interceptor';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 import { PokemonKeyPipe } from './pipes/pokemon-key.pipe';
@@ -17,8 +20,12 @@ export class PokemonsController {
     constructor(private readonly pokemonsService: PokemonsService) {}
 
     @Post()
-    create(@Body() createPokemonDto: CreatePokemonDto) {
-        return this.pokemonsService.create(createPokemonDto);
+    @UseInterceptors(TransactionInterceptor)
+    create(
+        @Body() createPokemonDto: CreatePokemonDto,
+        @Request() { queryRunner: qr },
+    ) {
+        return this.pokemonsService.create(createPokemonDto, qr);
     }
 
     @Get()

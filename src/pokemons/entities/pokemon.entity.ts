@@ -1,9 +1,11 @@
 import { RPG_TYPE, RpgType } from 'src/common/const/types';
 import { Metadata } from 'src/common/metadata.table';
+import { Description } from 'src/pokemons/entities/description.entity';
 import {
     AfterLoad,
     Column,
     Entity,
+    OneToMany,
     PrimaryGeneratedColumn,
     Unique,
 } from 'typeorm';
@@ -99,4 +101,10 @@ export class Pokemon extends Metadata {
         comment: 'The generation in which the Pokémon was first introduced.',
     })
     introducedGen?: number;
+
+    @OneToMany(() => Description, (description) => description.pokemon, {
+        // cascade: true,
+        nullable: true,
+    })
+    descriptions: Description[];
 }

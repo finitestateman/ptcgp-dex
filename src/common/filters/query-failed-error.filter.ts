@@ -30,6 +30,12 @@ export class QueryFailedErrorFilter<T extends QueryFailedError>
                 statusCode: HttpStatus.CONFLICT,
                 path: request.url,
             });
+        } else {
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                message: 'Query Failed',
+                statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+                path: request.url,
+            });
         }
     }
 }

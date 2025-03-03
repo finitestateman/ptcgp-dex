@@ -11,8 +11,8 @@ import {
     OneToOne,
     PrimaryColumn,
 } from 'typeorm';
+import { Description } from '../../pokemons/entities/description.entity';
 import { Card } from './card.entity';
-import { Description } from './description.entity';
 
 @Entity()
 export class PokemonCard {
