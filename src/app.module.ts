@@ -4,9 +4,13 @@ import { APP_FILTER } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as Joi from 'joi';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { AbilitiesModule } from './abilities/abilities.module';
+import { AttacksModule } from './attacks/attacks.module';
+import { CardsModule } from './cards/cards.module';
 import { DOTENV } from './common/const/env.const';
 import { QueryFailedErrorFilter } from './common/filters/query-failed-error.filter';
 import { PokemonsModule } from './pokemons/pokemons.module';
+import { TcgTypesModule } from './tcg-types/tcg-types.module';
 
 @Module({
     imports: [
@@ -39,6 +43,10 @@ import { PokemonsModule } from './pokemons/pokemons.module';
             inject: [ConfigService],
         }),
         PokemonsModule,
+        CardsModule,
+        AttacksModule,
+        AbilitiesModule,
+        TcgTypesModule,
     ],
     controllers: [],
     providers: [

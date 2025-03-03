@@ -36,3 +36,13 @@ export const TCG_TYPE = {
 } as const;
 
 export type TcgType = (typeof TCG_TYPE)[keyof typeof TCG_TYPE];
+
+export const ENERGY = TCG_TYPE;
+export type Energy = TcgType;
+
+export const OPERATOR = {
+    PLUS: '+',
+    TIMES: '*',
+};
+
+export type Operator = (typeof OPERATOR)[keyof typeof OPERATOR];

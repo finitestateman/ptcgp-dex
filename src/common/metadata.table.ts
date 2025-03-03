@@ -1,10 +1,10 @@
 import { CreateDateColumn, UpdateDateColumn, VersionColumn } from 'typeorm';
 
 export abstract class Metadata {
-    @CreateDateColumn({ select: false })
+    @CreateDateColumn({ type: 'timestamptz', select: false })
     public createdAt: Date;
 
-    @UpdateDateColumn({ select: false })
+    @UpdateDateColumn({ type: 'timestamptz', select: false })
     public updatedAt: Date;
 
     @VersionColumn({ select: false })
