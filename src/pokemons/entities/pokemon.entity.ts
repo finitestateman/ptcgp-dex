@@ -7,14 +7,13 @@ import {
     Entity,
     OneToMany,
     PrimaryGeneratedColumn,
-    Unique,
 } from 'typeorm';
 import { PokemonName } from './pokemon_name.entity';
 
 @Entity({
     comment: 'Pokédex from the original Pokémon games',
 })
-@Unique(['dexNo', 'name'])
+// @Unique(['dexNo', 'name'])
 export class Pokemon extends Metadata {
     @PrimaryGeneratedColumn('identity', {
         type: 'int',
@@ -44,13 +43,13 @@ export class Pokemon extends Metadata {
     })
     identifier: string;
 
-    @Column({
-        type: 'varchar',
-        length: 64,
-        nullable: false,
-        comment: 'The Name of the Pokémon in English.',
-    })
-    name: string;
+    // @Column({
+    //     type: 'varchar',
+    //     length: 64,
+    //     nullable: false,
+    //     comment: 'The Name of the Pokémon in English.',
+    // })
+    // name: string;
 
     @Column({
         type: 'varchar',
@@ -110,7 +109,7 @@ export class Pokemon extends Metadata {
     })
     descriptions: Description[];
 
-    @OneToMany(() => PokemonName, (pokemonName) => pokemonName.name, {
+    @OneToMany(() => PokemonName, (pokemonName) => pokemonName.pokemon, {
         cascade: true,
         nullable: true,
         eager: true,

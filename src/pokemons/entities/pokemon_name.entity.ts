@@ -1,20 +1,23 @@
 import { LANG, lang } from 'src/common/const/lang';
-import { Column, Entity, ManyToOne, PrimaryColumn, Unique } from 'typeorm';
+import {
+    Column,
+    Entity,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+    Unique,
+} from 'typeorm';
 import { Pokemon } from './pokemon.entity';
 
 @Entity({
-    synchronize: false,
+    // synchronize: false,
 })
 @Unique(['lang', 'pokemon'])
 export class PokemonName {
-    @PrimaryColumn()
-    pokemonId: number;
-
-    @ManyToOne(() => Pokemon, (pokemon) => pokemon.id, {
-        nullable: false,
-        onDelete: 'CASCADE',
+    @PrimaryGeneratedColumn('identity', {
+        type: 'int',
+        name: 'id',
     })
-    pokemon: Pokemon;
+    id: number;
 
     @Column({
         type: 'enum',
@@ -30,4 +33,10 @@ export class PokemonName {
         nullable: false,
     })
     name: string;
+
+    @ManyToOne(() => Pokemon, (pokemon) => pokemon.pokemonNames, {
+        nullable: false,
+        onDelete: 'CASCADE',
+    })
+    pokemon: Pokemon;
 }

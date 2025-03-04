@@ -20,11 +20,25 @@ export class PokemonsService {
     ) {}
 
     async create(createPokemonDto: CreatePokemonDto, qr: QueryRunner) {
-        const { description: descriptionDto, ...pokemonDto } = createPokemonDto;
-        const entity = { ...pokemonDto, descriptions: [descriptionDto] };
-
-        const pokemon = await qr.manager.save(Pokemon, entity);
+        const { lang, description, name, ...pokemonEntityLike } =
+            createPokemonDto;
+        const descriptions = [{ content: description, lang }];
+        const names = [{ name, lang }];
+        const pokemon = await this.pokemonRepo.save({
+            id: 4,
+            ...pokemonEntityLike,
+            descriptions,
+            pokemonNames: names,
+            // descriptions: [{ content: description, lang }],
+            // pokemonNames: [{ name, lang }],
+        });
         return pokemon;
+    }
+    async create2(createPokemonDto: CreatePokemonDto, qr: QueryRunner) {
+        // const { description: descriptionDto, ...pokemonDto } = createPokemonDto;
+        // const entity = { ...pokemonDto, descriptions: [descriptionDto] };
+        // const pokemon = await qr.manager.save(Pokemon, entity);
+        // return pokemon;
     }
 
     async findAll() {

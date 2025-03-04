@@ -12,19 +12,19 @@ export class Description extends Metadata {
     id: number;
 
     @Column({
-        type: 'varchar',
-        length: '512',
-        nullable: false,
-    })
-    content: string;
-
-    @Column({
         type: 'enum',
         nullable: false,
         enumName: 'lang',
         enum: Object.values(LANG),
     })
     lang: lang;
+
+    @Column({
+        type: 'varchar',
+        length: '512',
+        nullable: false,
+    })
+    content: string;
 
     @ManyToOne(() => Pokemon, (pokemon) => pokemon.descriptions, {
         nullable: false,

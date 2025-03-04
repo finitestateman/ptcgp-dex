@@ -1,16 +1,14 @@
-import { Type } from 'class-transformer';
 import {
-    IsIn,
+    IsEnum,
     IsInt,
     IsNotEmpty,
     IsOptional,
     IsPositive,
     IsString,
-    ValidateNested,
 } from 'class-validator';
+import { lang, LANG } from 'src/common/const/lang';
 import { RPG_TYPE, RpgType } from 'src/common/const/types';
 import { IsSlug } from 'src/common/decorators/isSlug.decorator';
-import { CreateDescriptionDto } from './create-description.dto';
 
 export class CreatePokemonDto {
     @IsOptional()
@@ -24,17 +22,13 @@ export class CreatePokemonDto {
 
     @IsNotEmpty()
     @IsString()
-    name: string;
-
-    @IsNotEmpty()
-    @IsString()
     species: string;
 
-    @IsIn(Object.values(RPG_TYPE))
+    @IsEnum(RPG_TYPE)
     type1: RpgType;
 
     @IsOptional()
-    @IsIn(Object.values(RPG_TYPE))
+    @IsEnum(RPG_TYPE)
     type2?: RpgType;
 
     @IsOptional()
@@ -58,7 +52,14 @@ export class CreatePokemonDto {
     // content?: string;
 
     @IsNotEmpty()
-    @Type(() => CreateDescriptionDto)
-    @ValidateNested()
-    description: CreateDescriptionDto;
+    @IsEnum(LANG)
+    lang: lang;
+
+    @IsNotEmpty()
+    @IsString()
+    description: string;
+
+    @IsNotEmpty()
+    @IsString()
+    name: string;
 }
