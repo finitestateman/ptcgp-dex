@@ -15,7 +15,6 @@ export class Attack extends Metadata {
         type: 'varchar',
         length: 64,
         nullable: false,
-        unique: true,
     })
     name: string;
 

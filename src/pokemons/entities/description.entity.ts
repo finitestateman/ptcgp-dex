@@ -26,6 +26,9 @@ export class Description extends Metadata {
     })
     lang: lang;
 
-    @ManyToOne(() => Pokemon, (pokemon) => pokemon.descriptions)
+    @ManyToOne(() => Pokemon, (pokemon) => pokemon.descriptions, {
+        nullable: false,
+        onDelete: 'CASCADE',
+    })
     pokemon: Pokemon;
 }

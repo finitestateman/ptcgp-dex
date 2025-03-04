@@ -9,7 +9,6 @@ import {
 } from 'typeorm';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
-import { Description } from './entities/description.entity';
 import { Pokemon } from './entities/pokemon.entity';
 
 @Injectable()
@@ -22,92 +21,42 @@ export class PokemonsService {
 
     async create(createPokemonDto: CreatePokemonDto, qr: QueryRunner) {
         const { description: descriptionDto, ...pokemonDto } = createPokemonDto;
+        const entity = { ...pokemonDto, descriptions: [descriptionDto] };
 
-        const pokemon = await qr.manager.save(Pokemon, pokemonDto);
-        const description = await qr.manager.save(Description, {
-            ...descriptionDto,
-            pokemon: { id: pokemon.id },
-        });
-        return { ...pokemon, description };
-
-        // const pokemon = await this.pokemonRepo.save(createPokemonDto);
-
-        // if (createPokemonDto.content) {
-        //     const description = this.pokemonRepo.create({
-        //         ...pokemon,
-        //         descriptions: {
-        //             content: createPokemonDto.content,
-        //         },
-        //     });
-        // await this.pokemonRepo.save(description);
-        // }
-
-        // const pokemon = await this.pokemonRepo.save(pokemonDto);
-
-        // const pokemon = await this.pokemonRepo.save({
-        //     pokemonDto,
-        //     criptions: [],
-        //     //     descriptionDto,
-        //     //     // {
-        //     //     //     // id: 1,
-        //     //     //     content: createPokemonDto.content,
-        //     //     //     pokemon: {
-        //     //     //         id: 1,
-        //     //     //     },
-        //     //     // },
-        //     // ],
-        // });
-
-        // const description = this.descriptionRepo.save({
-        //     ...descriptionDto,
-        //     pokemon: { id: pokemon.id },
-        // });
-        // return pokemon;
+        const pokemon = await qr.manager.save(Pokemon, entity);
+        return pokemon;
     }
 
     async findAll() {
-        const qb = this.dataSource
-            .getRepository(Pokemon)
-            .createQueryBuilder('p')
-            .leftJoin('p.descriptions', 'd')
-            .addSelect('d.content')
-            .addOrderBy('dex_no', 'ASC', 'NULLS LAST');
+        const pokemon = await this.pokemonRepo.find({
+            comment: 'This is a comment',
+            relationLoadStrategy: 'query',
+            order: {
+                dexNo: { direction: 'ASC', nulls: 'LAST' },
+            },
+        });
 
-        const pokemon = await qb.getMany();
         return pokemon;
     }
 
     async findOne(key: string | number): Promise<Pokemon> {
         const keyColumn = typeof key === 'string' ? 'identifier' : 'dex_no';
 
-        try {
-            const pokemon = await this.dataSource
-                .getRepository(Pokemon)
-                .createQueryBuilder('p')
-                .leftJoin('p.descriptions', 'd')
-                .addSelect('d.content')
-                .andWhere(`p.${keyColumn} = :key`, { key })
-                .addOrderBy('dex_no', 'ASC', 'NULLS LAST')
-                .getOne();
+        const pokemon = await this.dataSource
+            .getRepository(Pokemon)
+            .createQueryBuilder('p')
+            // .leftJoin('p.descriptions', 'd')
+            // .addSelect('d.content')
+            .leftJoinAndSelect('p.descriptions', 'd')
+            .andWhere(`p.${keyColumn} = :key`, { key })
+            .addOrderBy('dex_no', 'ASC', 'NULLS LAST')
+            .getOne();
 
-            if (!pokemon) {
-                throw new NotFoundException(
-                    `Pokemon not found for key: ${key}`,
-                );
-            }
-
-            return pokemon;
-        } catch (error) {
-            console.log(error);
-            throw error;
-            // throw new BadRequestException(error);
+        if (!pokemon) {
+            throw new NotFoundException(`Pokemon not found for key: ${key}`);
         }
 
-        // const pokemon = await this.pokemonRepo.findOne({
-        //     where: [
-        //         typeof key === 'string' ? { identifier: key } : { dexNo: key },
-        //     ],
-        // });
+        return pokemon;
     }
 
     async update(key: string | number, updatePokemonDto: UpdatePokemonDto) {
@@ -123,13 +72,13 @@ export class PokemonsService {
         return result;
     }
 
-    async remove(id: string | number) {
+    async remove(key: string | number) {
         const result: DeleteResult = await this.pokemonRepo.delete(
-            typeof id === 'string' ? { identifier: id } : { dexNo: id },
+            typeof key === 'string' ? { identifier: key } : { dexNo: key },
         );
 
         if (result.affected === 0) {
-            throw new NotFoundException(`Pokemon not found for key: ${id}`);
+            throw new NotFoundException(`Pokemon not found for key: ${key}`);
         }
 
         return result;

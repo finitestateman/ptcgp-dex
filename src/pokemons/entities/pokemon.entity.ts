@@ -9,6 +9,7 @@ import {
     PrimaryGeneratedColumn,
     Unique,
 } from 'typeorm';
+import { PokemonName } from './pokemon_name.entity';
 
 @Entity({
     comment: 'Pokédex from the original Pokémon games',
@@ -103,8 +104,16 @@ export class Pokemon extends Metadata {
     introducedGen?: number;
 
     @OneToMany(() => Description, (description) => description.pokemon, {
-        // cascade: true,
+        cascade: true,
         nullable: true,
+        eager: true,
     })
     descriptions: Description[];
+
+    @OneToMany(() => PokemonName, (pokemonName) => pokemonName.name, {
+        cascade: true,
+        nullable: true,
+        eager: true,
+    })
+    pokemonNames: PokemonName[];
 }

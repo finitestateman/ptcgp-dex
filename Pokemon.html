@@ -44,7 +44,7 @@
         <div>
             <label for="type2">Type2:</label>
             <select id="type2" name="type2">
-                <option value="">선택하세요</option>
+                <option value="">선택 안 함</option>
                 <option value="grass">grass</option>
                 <option value="fire">fire</option>
                 <option value="water">water</option>
@@ -77,56 +77,73 @@
     </form>
 
     <script>
-        document.getElementById('pokemonForm').addEventListener('submit', function (event) {
+        document.addEventListener("DOMContentLoaded", () => {
+            // 기존에 저장된 데이터가 있으면 불러오기
+            const savedData = JSON.parse(localStorage.getItem("pokemonFormData"));
+            if (savedData) {
+                Object.keys(savedData).forEach(key => {
+                    const input = document.getElementById(key);
+                    if (input) input.value = savedData[key];
+                });
+            }
+        });
+
+        document.getElementById("pokemonForm").addEventListener("input", () => {
+            // 입력값이 변경될 때마다 localStorage에 저장
+            const formData = {
+                dexNo: document.getElementById("dexNo").value,
+                identifier: document.getElementById("identifier").value,
+                name: document.getElementById("name").value,
+                species: document.getElementById("species").value,
+                type1: document.getElementById("type1").value,
+                type2: document.getElementById("type2").value,
+                height: document.getElementById("height").value,
+                weight: document.getElementById("weight").value,
+                introducedGen: document.getElementById("introducedGen").value,
+                descriptionContent: document.getElementById("descriptionContent").value
+            };
+            localStorage.setItem("pokemonFormData", JSON.stringify(formData));
+        });
+
+        document.getElementById("pokemonForm").addEventListener("submit", async function (event) {
             event.preventDefault(); // 폼 기본 제출 이벤트 중지
 
-            const dexNo = Number(document.getElementById('dexNo').value);
-            const identifier = document.getElementById('identifier').value;
-            const name = document.getElementById('name').value;
-            const species = document.getElementById('species').value + ' Pokémon';
-            const type1 = document.getElementById('type1').value;
-            const type2 = document.getElementById('type2').value;
-            const height = Number(document.getElementById('height').value);
-            const weight = Number(document.getElementById('weight').value);
-            const introducedGen = Number(document.getElementById('introducedGen').value);
-            const descriptionContent = document.getElementById('descriptionContent').value;
-
             const payload = {
-                dexNo: dexNo,
-                identifier: identifier,
-                name: name,
-                species: species,
-                type1: type1,
-                type2: type2,
-                height: height,
-                weight: weight,
-                introducedGen: introducedGen,
+                dexNo: Number(document.getElementById("dexNo").value),
+                identifier: document.getElementById("identifier").value,
+                name: document.getElementById("name").value,
+                species: document.getElementById("species").value + " Pokémon",
+                type1: document.getElementById("type1").value,
+                type2: document.getElementById("type2").value || null, // type2가 선택되지 않으면 null
+                height: Number(document.getElementById("height").value),
+                weight: Number(document.getElementById("weight").value),
+                introducedGen: Number(document.getElementById("introducedGen").value),
                 description: {
-                    content: descriptionContent
+                    content: document.getElementById("descriptionContent").value
                 }
             };
 
-            fetch('http://localhost:3000/pokemons', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('서버 응답이 정상적이지 않습니다.');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('서버 응답:', data);
-                    alert('데이터가 성공적으로 전송되었습니다.');
-                })
-                .catch(error => {
-                    console.error('전송 에러:', error);
-                    alert('데이터 전송 중 오류가 발생했습니다.');
+            try {
+                const response = await fetch("http://localhost:3000/pokemons", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
                 });
+
+                if (!response.ok) {
+                    throw new Error("서버 응답이 정상적이지 않습니다.");
+                }
+
+                const data = await response.json();
+                console.log("서버 응답:", data);
+                alert("데이터가 성공적으로 전송되었습니다.");
+                localStorage.removeItem("pokemonFormData"); // 성공하면 데이터 삭제
+            } catch (error) {
+                console.error("전송 에러:", error);
+                alert("데이터 전송 중 오류가 발생했습니다. 폼 내용을 유지합니다.");
+            }
         });
     </script>
 </body>
